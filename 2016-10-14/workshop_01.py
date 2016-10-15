@@ -12,14 +12,14 @@ def spaceFrame(bx,bz,px,py,distances,heights):
 
   if bx>px:
     dist=(bx-px)/2.
-    pilX=[0,-dist,px]
+    pilX=[-dist,px]
     beaX=[bx]
   elif bx==px:
     beaX=[bx]
     pilX=[px]
   else:
     dist=(px-bx)/2.
-    beaX=[0,-dist,bx]
+    beaX=[-dist,bx]
     pilX=[px]
 
   
@@ -28,7 +28,7 @@ def spaceFrame(bx,bz,px,py,distances,heights):
 
   
   beaY=[py/2,0]
-  beaZ=[0,h*-1,bz]
+  beaZ=[h*-1,bz]
 
   
 
@@ -63,5 +63,5 @@ def spaceFrame(bx,bz,px,py,distances,heights):
   
 
     
-VIEW(spaceFrame(1.,1.,1.,1.,[4,1,5,2],[4,2,5]))
+VIEW(spaceFrame(1.,1.,3.,1.,[4,1,5,2],[4,2,5]))
 
