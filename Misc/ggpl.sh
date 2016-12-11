@@ -37,8 +37,8 @@ cd poly2tri.python
 echo -e "${RED}Installazione larlib:${NC}"
 yes Y | python get-pip.py
 yes Y | sudo apt-get -y install python-pip
-yes Y | pip install --upgrade pip
-yes Y | pip install Cython
+yes Y | sudo pip install --upgrade pip
+yes Y | sudo pip install Cython
 yes Y | python setup.py build_ext -i
 yes Y | sudo python setup.py install
 yes Y | sudo pip install larlib
@@ -50,7 +50,7 @@ sudo apt-get update
 echo -e "${RED}Inkscape:${NC}"
 yes Y | sudo apt-get install inkscape
 echo -e "${RED}Jupyter:${NC}"
-yes Y | pip install jupyter
+yes Y | sudo pip install jupyter
 echo -e "${RED}Sublime:${NC}"
 yes Y | sudo add-apt-repository ppa:webupd8team/sublime-text-3
 yes Y | sudo apt-get update
