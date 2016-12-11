@@ -2,7 +2,7 @@
 
 Script di installazione, per il corso di "Laboratorio di programmazione geometrica e grafica"
 
-*Questo script, consente di installare automaticamente su macchine linux, tutto il software necessario per il corso di 'Laboratorio di programmazione geometrica e grafica'.<br>In particolare:<br>"
+*Questo script, consente di installare automaticamente su macchine linux, tutto il software necessario per il corso di 'Laboratorio di programmazione geometrica e grafica'.<br>In particolare:<br>*
 * Pyplasm
 * Larlib
 * Pip
