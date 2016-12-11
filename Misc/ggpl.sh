@@ -35,7 +35,6 @@ echo -e "${RED}Download poly2tri:${NC}"
 yes Y\n | git clone git://github.com/davidcarne/poly2tri.python
 cd poly2tri.python
 echo -e "${RED}Installazione larlib:${NC}"
-yes Y | python get-pip.py
 yes Y | sudo apt-get -y install python-pip
 yes Y | sudo pip install --upgrade pip
 yes Y | sudo pip install Cython
