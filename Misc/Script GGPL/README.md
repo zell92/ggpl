@@ -20,8 +20,8 @@ e salvalo nella directory **/home/$USERNAME/**
 
 ### Passo 2:
 
-Dal terminale, vai nella cartella dove hai salvato ggpl.sh
-"Se hai seguito le mie istruzioni dovrebbe essere la cartella /home/$USERNAME/"
+Dal terminale, vai nella cartella dove hai salvato ggpl.sh<br>
+*Se hai seguito le mie istruzioni dovrebbe essere la cartella /home/$USERNAME/*
 
 ```
 cd /home/$USERNAME/
