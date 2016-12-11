@@ -15,7 +15,7 @@ Script di installazione, per il corso di "Laboratorio di programmazione geometri
 
 ### Passo 1:
 
-Scarica [ggpl.sh](ggpl/Misc/Script GGPL/ggpl.sh)
+Scarica [ggpl.sh](https://github.com/zell92/ggpl/blob/master/Misc/Script%20GGPL/ggpl.sh)
 e salvalo nella directory **/home/$USERNAME/**
 
 ### Passo 2:
