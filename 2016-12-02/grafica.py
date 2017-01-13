@@ -13,11 +13,11 @@ def building_wall(nameLines_path,texture_path,depthWall):
 		reader = csv.reader(file, delimiter=",")
 		listWalls = []
 		for row in reader:
-			listWalls.append(POLYLINE([[float(row[3]), float(row[2])],[float(row[1]), float(row[0])]]))
+			listWalls.append(POLYLINE([[float(row[0]), float(row[1])],[float(row[2]), float(row[3])]]))
 	walls = STRUCT(listWalls)
 	floor = SOLIDIFY(walls)
-	xfactor = 25/SIZE([1])(walls)[0]
-	yfactor = 15.1/SIZE([2])(walls)[0]
+	xfactor = 15.1/SIZE([1])(walls)[0]
+	yfactor = 25/SIZE([2])(walls)[0]
 	walls = OFFSET([depthWall,depthWall])(walls)
 	walls = PROD([walls, Q(3/xfactor)])
 	#creo le porte
@@ -28,7 +28,7 @@ def building_wall(nameLines_path,texture_path,depthWall):
 		acc = 0
 		for row in reader:
 			acc = acc + 1
-			cuboid.append([float(row[1]),float(row[0])])
+			cuboid.append([float(row[0]),float(row[1])])
 			if(acc == 4):
 				doorsList.append(MKPOL([cuboid,[[1,2,3,4]],None]))
 				cuboid = []
@@ -43,7 +43,7 @@ def building_wall(nameLines_path,texture_path,depthWall):
 		acc = 0
 		for row in reader:
 			acc = acc + 1
-			cuboid.append([float(row[1]),float(row[0])])
+			cuboid.append([float(row[0]),float(row[1])])
 			if(acc == 4):
 				windowList.append(MKPOL([cuboid,[[1,2,3,4]],None]))
 				cuboid = []
@@ -111,7 +111,7 @@ def ggpl_building_house():
 	#casa senza pavimenti
 	house=STRUCT([externalWalls,internalWalls])
 	#ridimensiono la casa	
-	house = (S([1,2,3])([xfactor,yfactor, xfactor])(house))
+	#house = (S([1,2,3])([xfactor,yfactor, xfactor])(house))
 
 	#pavimento bagno
 	bathFloor=building_floor("lines/bagno.lines")
@@ -135,8 +135,8 @@ def ggpl_building_house():
 	house=STRUCT([house,floor])
 
 	#aggiusto la casa rispetto gli assi
-	house=STRUCT([R([1,2])(-PI/2),house])
-	house=STRUCT([T([2])(SIZE(2)(house)),house])
+	#house=STRUCT([R([1,2])(-PI/2),house])
+	#house=STRUCT([T([2])(SIZE(2)(house)),house])
 
 	return house
 
