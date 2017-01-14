@@ -20,9 +20,9 @@ def building_wall(nameLines_path,depthWall,dimZ):
 	walls = PROD([walls, Q(dimZ)])
 	return walls
 
-def building_doors(wall,texture_path): #altezza predefinita 2,5m
+def building_doors(wall,linesPath,texture_path): #altezza predefinita 2,5m
 	#creo le porte
-	with open("lines/porte.lines", "rb") as file:
+	with open(linesPath, "rb") as file:
 		reader = csv.reader(file, delimiter=",")
 		doorsList = []
 		cuboid = []
@@ -64,10 +64,10 @@ def building_floor(nameLines_path):
 	return floor
 
 
-def building_windows(wall): #altezza dal suolo predefinita meta' muro
+def building_windows(wall,linesPath): #altezza dal suolo predefinita meta' muro
 
 	#creo le finestre
-	with open("lines/finestre.lines", "rb") as file:
+	with open(linesPath, "rb") as file:
 		reader = csv.reader(file, delimiter=",")
 		windowList = []
 		cuboid = []
@@ -97,9 +97,9 @@ def ggpl_building_house(dimX,dimY):
 	internalWalls= building_wall("lines/interno.lines",3,3)
 
 	#costruzione porte e finestre
-	externalWalls = building_windows(externalWalls)
-	externalWalls = building_doors(externalWalls,"texture/wall_internal.jpg")	
-	internalWalls = building_doors(internalWalls,"texture/wall_internal.jpg")
+	externalWalls = building_windows(externalWalls,"lines/finestre.lines")
+	externalWalls = building_doors(externalWalls,"lines/porte.lines","texture/wall_internal.jpg")	
+	internalWalls = building_doors(internalWalls,"lines/porte.lines","texture/wall_internal.jpg")
 
 
 	#casa senza pavimenti
@@ -130,13 +130,57 @@ def ggpl_building_house(dimX,dimY):
 	#ridimensiono
 	house = (S([1,2])([xfactor,yfactor])(house))
 	
-	print(SIZE([1,2,3])(house))
+
+	return house
+
+def ggpl_building_house_second_floor(dimX,dimY):
+	"""
+	ggpl_building_house_second_floor is a function that generate the HPC Model represent the second floor structure of the house by the input file in .lines files.
+	@return house: HPC Model represent the structure.
+	"""
+	#costruzione muri
+	externalWalls=building_wall("lines/esterno2.lines",6,3)
+	internalWalls= building_wall("lines/interno2.lines",3,3)
+
+	#costruzione porte e finestre
+	externalWalls = building_windows(externalWalls,"lines/finestre2.lines")
+	externalWalls = building_doors(externalWalls,"lines/porte2.lines","texture/wall_internal.jpg")	
+	internalWalls = building_doors(internalWalls,"lines/porte2.lines","texture/wall_internal.jpg")
+
+
+	#casa senza pavimenti
+	house=STRUCT([externalWalls,internalWalls])
+	
+
+	#pavimento bagno
+	bathFloor=building_floor("lines/bagno2.lines")
+	bathFloor=TEXTURE(["texture/bath.jpg", TRUE, FALSE, 1, 1, 0, 14, 6])(bathFloor)
+
+	#pavimento resto della casa
+	otherFloor=building_floor("lines/parquet2.lines")
+	otherFloor=TEXTURE(["texture/parquet.jpg", TRUE, FALSE, 1, 1, 0, 2, 2])(otherFloor)
+
+	#pavimento totale
+	floor=STRUCT([bathFloor,otherFloor])
+
+	#casa con pavimento
+	house=STRUCT([house,floor])
+
+	#fattori di scala x e y
+	xfactor=dimX/SIZE([1])(house)[0]
+	yfactor=dimY/SIZE([2])(house)[0]
+
+	#ridimensiono
+	house = (S([1,2])([xfactor,yfactor])(house))
+	#traslo in alto
+	#house = STRUCT([T([3])(3),house])
+	
 
 	return house
 
 
 def main():
-	VIEW(ggpl_building_house(19,9))
+	VIEW(ggpl_building_house_second_floor(19,9))
 if __name__ == "__main__":
     main()
 

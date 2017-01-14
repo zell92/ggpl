@@ -1,7 +1,6 @@
-from house_windows_and_doors import *
-from tools import *
 from pyplasm import *
 from fpformat import *
+from tools import *
 def window(X,Y,Z,occupancy):
     def window2(dx,dy,dz):
         
@@ -243,74 +242,5 @@ def createSingleDoor(dx,dy,dz,colore):
 	#ZYX
 	return singleDoor(X,Y,Z,occupancy)(dx,dy,dz,colore)
 
-def adaptWindow():
-    data=getDataWindows(19,9)
-    windows=[]
-    for d in data:
-        print(d[0])
-        if d[0][0]>d[0][1]:
-            w=createWindow(d[0][0],d[0][1],d[0][2])
-            w=rotation(w,2)
-        else:
-            w=createWindow(d[0][1],d[0][0],d[0][2])
-            w=rotation(w,1)
-            
-        w=STRUCT([T([1,2,3])(d[1]),w])
-        windows.append(w)
-
-    return STRUCT(windows)
-
-def adaptExternalDoor():
-	data=getDataExternalDoors(19,9)
-	doors=[]
-	for d in data:
-		if d[0][0]>d[0][1]:
-			if d[0][0]>=1.5:
-				door=createDubleDoor(d[0][0],d[0][1],d[0][2],color(255,255,255))
-			else:
-				door=createSingleDoor(d[0][0],d[0][1],d[0][2],color(255,255,255))
-			door=rotation(door,2)
-		else:
-			if d[0][1]>=1.5:
-				door=createDubleDoor(d[0][0],d[0][1],d[0][2],color(255,255,255))
-			else:
-				door=createSingleDoor(d[0][0],d[0][1],d[0][2],color(255,255,255))
-			door=rotation(door,1)
-			
-		door=STRUCT([T([1,2,3])(d[1]),door])
-		doors.append(door)
-
-	return STRUCT(doors)
-
-def adaptInternalDoor():
-	data=getDatainternalDoors(19,9)
-	doors=[]
-	for d in data:
-		if d[0][0]>d[0][1]:
-			if d[0][0]>=1.5:
-				door=createDubleDoor(d[0][0],d[0][1],d[0][2],color(102,51,0))
-			else:
-				door=createSingleDoor(d[0][0],d[0][1],d[0][2],color(102,51,0))
-			door=rotation(door,2)
-		else:
-			if d[0][1]>=1.5:
-				door=createDubleDoor(d[0][1],d[0][0],d[0][2],color(102,51,0))
-			else:
-				door=createSingleDoor(d[0][1],d[0][0],d[0][2],color(102,51,0))
-			door=rotation(door,1)
-		door=STRUCT([T([1,2,3])(d[1]),door])
-		doors.append(door)
-
-
-	return STRUCT(doors)
-
-
-def main():
-	house = ggpl_building_house(19,9)
-	house=STRUCT([house,adaptWindow(),adaptInternalDoor(),adaptExternalDoor()])
-	VIEW(house)
-
-if __name__ == "__main__":
-    main()
 
 

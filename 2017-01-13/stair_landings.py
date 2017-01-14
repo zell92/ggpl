@@ -1,4 +1,7 @@
-from windows_and_doors import *
+from pyplasm import *
+from tools import *
+
+
 def rizerAndTread(dy,dz):
     """
     this function returns a 3-values array: rizer of a step, 
@@ -108,10 +111,16 @@ def ggpl_stair_landings(dx,dy,dz):
 
     scala2=STRUCT([COLOR(color(255,255,255)),S([1,2,3])([sx,sy,sz]),scala2])
     return scala2
+
+def createStair(x,y,z):
+    r= ggpl_stair_landings(x,y,z)
+    r=STRUCT(S)
    
 def main():
-    r=ggpl_stair_landings(3.2,3.4,3.6)
+    r=ggpl_stair_landings(2,3,3)
+    print (getDimensionAndPosition(r))
     VIEW(r)
 
 if __name__ == "__main__":
     main()
+
