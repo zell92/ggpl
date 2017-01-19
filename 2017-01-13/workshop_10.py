@@ -2,6 +2,7 @@ from house_structure import *
 from tools import *
 from windows_and_doors import *
 from stair_landings import *
+from roof import *
 
 
 def getDataExternalDoors (dimX,dimY,externalLinesPath,doorsLinePath):
@@ -270,6 +271,38 @@ def buildingCompleteHouse():
 
 		return completeSecondFloor
 	return completeFloors
+def roofCreator(dx1,dy1,dx2,dy2):
+
+	house = ggpl_building_house(dx1,dy1)
+	house2 = ggpl_building_house_second_floor(dx2,dy2)
+	dim1=getDimensionAndPosition(house)
+	dim2=getDimensionAndPosition(house2)
+	dim=[[dim1[0][0]-dim2[0][0],9,0],[dim2[1][0]+dim2[0][0],dim2[1][1],0]]
+
+	punti=[]
+	punti.append([dim[1][0],dim[1][1]])
+	punti.append([dim[1][0],dim[1][1]+dim[0][1]])
+	punti.append([dim[0][0]+dim[1][0],dim[0][1]+dim[1][1]])
+	punti.append([dim[1][0]+dim[0][0],dim[1][1]])
+	#print(punti)
+
+	altezza=getMinDistPitch(punti)/2
+	tetto=createRoof(punti,PI/5,altezza)
+
+	punti=[]
+	punti.append([dim2[1][0],dim2[1][1]])
+	punti.append([dim2[1][0],dim2[1][1]+dim2[0][1]])
+	punti.append([dim2[0][0]+dim2[1][0],dim2[0][1]+dim2[1][1]])
+	punti.append([dim2[1][0]+dim2[0][0],dim2[1][1]])
+	#print(punti)
+
+	altezza2=getMinDistPitch(punti)/2
+	tetto2=createRoof(punti,PI/5,altezza2)
+	
+	roof = STRUCT([tetto,T(3)(3),tetto2])
+	roof = STRUCT([T(3)(3),roof])
+	return roof
+
 def main():
 	#house = buildingCompleteHouse()(19,9,2)("lines/esterno.lines","lines/interno.lines","lines/finestre.lines", "lines/porte.lines", "lines/scala.lines")("lines/esterno2.lines","lines/interno2.lines","lines/finestre2.lines", "lines/porte2.lines")
 	#house = buildingCompleteHouse()(19,9,2)("lines/esterno2.lines","lines/interno2.lines","lines/finestre2.lines", "lines/porte2.lines")
@@ -279,8 +312,16 @@ def main():
 	#dimSecondFloor= getProportionalDimension(first,second,19,9)
 	#second=resize(second,dimSecondFloor[0],dimSecondFloor[1],3)
 	second = onAxes(second)
+	roof = roofCreator(19,9,16.3,9)
+	roof = onAxes(roof)
+	column = CUBOID([0.3,0.3,3])
+	column = TEXTURE(["texture/wall_internal.jpg", FALSE, TRUE, 1, 1, 0, 2, 2])(column)
+	VIEW(first)
 	house = STRUCT([first,T(3)(3),second])
-
+	VIEW(house)
+	house = STRUCT([house,roof])
+	house = rotation(house,2)
+	house = STRUCT([house,column])
 	VIEW(house)
 
 if __name__ == "__main__":
