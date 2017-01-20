@@ -87,19 +87,19 @@ def building_windows(wall,linesPath): #altezza dal suolo predefinita meta' muro
 	return w
 
 
-def ggpl_building_house(dimX,dimY):
+def ggpl_building_house(dimX,dimY,externalLinesPath,internalLinesPath,windowsLinesPath,doorsLinesPath):
 	"""
 	ggpl_building_house is a function that generate the HPC Model represent the house structure by the input file in .lines files.
 	@return house: HPC Model represent the structure.
 	"""
 	#costruzione muri
-	externalWalls=building_wall("lines/esterno.lines",6,3)
-	internalWalls= building_wall("lines/interno.lines",3,3)
+	externalWalls=building_wall(externalLinesPath,6,3)
+	internalWalls= building_wall(internalLinesPath,3,3)
 
 	#costruzione porte e finestre
-	externalWalls = building_windows(externalWalls,"lines/finestre.lines")
-	externalWalls = building_doors(externalWalls,"lines/porte.lines","texture/wall_internal.jpg")	
-	internalWalls = building_doors(internalWalls,"lines/porte.lines","texture/wall_internal.jpg")
+	externalWalls = building_windows(externalWalls,windowsLinesPath)
+	externalWalls = building_doors(externalWalls,doorsLinesPath,"texture/wall_internal.jpg")	
+	internalWalls = building_doors(internalWalls,doorsLinesPath,"texture/wall_internal.jpg")
 
 
 	#casa senza pavimenti
@@ -133,19 +133,19 @@ def ggpl_building_house(dimX,dimY):
 
 	return house
 
-def ggpl_building_house_second_floor(dimX,dimY):
+def ggpl_building_house_second_floor(dimX,dimY,externalLinesPath,internalLinesPath,windowsLinesPath,doorsLinesPath):
 	"""
 	ggpl_building_house_second_floor is a function that generate the HPC Model represent the second floor structure of the house by the input file in .lines files.
 	@return house: HPC Model represent the structure.
 	"""
 	#costruzione muri
-	externalWalls=building_wall("lines/esterno2.lines",6,3)
-	internalWalls= building_wall("lines/interno2.lines",3,3)
+	externalWalls=building_wall(externalLinesPath,6,3)
+	internalWalls= building_wall(internalLinesPath,3,3)
 
 	#costruzione porte e finestre
-	externalWalls = building_windows(externalWalls,"lines/finestre2.lines")
-	externalWalls = building_doors(externalWalls,"lines/porte2.lines","texture/wall_internal.jpg")	
-	internalWalls = building_doors(internalWalls,"lines/porte2.lines","texture/wall_internal.jpg")
+	externalWalls = building_windows(externalWalls,windowsLinesPath)
+	externalWalls = building_doors(externalWalls,doorsLinesPath,"texture/wall_internal.jpg")	
+	internalWalls = building_doors(internalWalls,doorsLinesPath,"texture/wall_internal.jpg")
 
 
 	#casa senza pavimenti
@@ -180,7 +180,11 @@ def ggpl_building_house_second_floor(dimX,dimY):
 
 
 def main():
-	VIEW(ggpl_building_house_second_floor(19,9))
+	externalLinesPath="lines/esterno2.lines"
+	internalLinesPath="lines/interno2.lines"
+	windowsLinesPath = "lines/finestre2.lines"
+	doorsLinesPath = "lines/porte2.lines"
+	VIEW(ggpl_building_house_second_floor(19,9,externalLinesPath,internalLinesPath,windowsLinesPath,doorsLinesPath))
 if __name__ == "__main__":
     main()
 

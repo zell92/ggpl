@@ -5,7 +5,7 @@ from stair_landings import *
 from roof import *
 
 
-def getDataExternalDoors (dimX,dimY,externalLinesPath,doorsLinePath):
+def getDataExternalDoors (dimX,dimY,externalLinesPath,doorsLinesPath):
 	#genero i muri esterni
 	externalWalls = building_wall(externalLinesPath,6,3)
 	#calcolo i fattori di scala x e y 
@@ -14,7 +14,7 @@ def getDataExternalDoors (dimX,dimY,externalLinesPath,doorsLinePath):
 	#ridimensiono
 	externalWalls = (S([1,2])([xfactor,yfactor])(externalWalls))
 	#creo cubi dove andranno le porte e li metto, uno ad uno, in un array
-	with open(doorsLinePath, "rb") as file:
+	with open(doorsLinesPath, "rb") as file:
 		reader = csv.reader(file, delimiter=",")
 		doorsList = []
 		cuboid = []
@@ -43,7 +43,7 @@ def getDataExternalDoors (dimX,dimY,externalLinesPath,doorsLinePath):
 
 	return dataDim
 	
-def getDatainternalDoors(dimX,dimY,externalLinesPath,internalLinesPath,doorsLinePath):
+def getDatainternalDoors(dimX,dimY,externalLinesPath,internalLinesPath,doorsLinesPath):
 	#genero i muri interni
 	externalWalls = building_wall(externalLinesPath,6,3)
 	internalWalls = building_wall(internalLinesPath,3,3)
@@ -56,7 +56,7 @@ def getDatainternalDoors(dimX,dimY,externalLinesPath,internalLinesPath,doorsLine
 	externalWalls = (S([1,2])([xfactor,yfactor])(externalWalls))
 	internalWalls=DIFFERENCE([internalWalls,externalWalls])
 	#creo cubi dove andranno le porte e li metto, uno ad uno, in un array
-	with open(doorsLinePath, "rb") as file:
+	with open(doorsLinesPath, "rb") as file:
 		reader = csv.reader(file, delimiter=",")
 		doorsList = []
 		cuboid = []
@@ -87,7 +87,7 @@ def getDatainternalDoors(dimX,dimY,externalLinesPath,internalLinesPath,doorsLine
 
 from house_structure import *
 
-def getDataWindows (dimX,dimY,externalLinesPath,windowsLinePath):
+def getDataWindows (dimX,dimY,externalLinesPath,windowsLinesPath):
 	#genero i muri esterni
 	externalWalls = building_wall(externalLinesPath,6,3)
 	#calcolo i fattori di scala x e y 
@@ -96,7 +96,7 @@ def getDataWindows (dimX,dimY,externalLinesPath,windowsLinePath):
 	#ridimensiono
 	externalWalls = (S([1,2])([xfactor,yfactor])(externalWalls))
 	#creo cubi dove andranno le finestre e li metto, uno ad uno, in un array
-	with open(windowsLinePath, "rb") as file:
+	with open(windowsLinesPath, "rb") as file:
 		reader = csv.reader(file, delimiter=",")
 		windowsList = []
 		cuboid = []
@@ -128,7 +128,7 @@ def getDataWindows (dimX,dimY,externalLinesPath,windowsLinePath):
 
 	return dataDim
 
-def getDataStairs(dimX,dimY,externalLinesPath,internalLinesPath,stairsLinePath):
+def getDataStairs(dimX,dimY,externalLinesPath,internalLinesPath,stairsLinesPath):
 	#genero tutti i muri della casa
 	externalWalls = building_wall(externalLinesPath,6,3)
 	internalWalls = building_wall(internalLinesPath,3,3)
@@ -139,7 +139,7 @@ def getDataStairs(dimX,dimY,externalLinesPath,internalLinesPath,stairsLinePath):
 	#ridimensiono
 	walls = (S([1,2])([xfactor,yfactor])(internalWalls))
 	#creo cubi dove andranno le scale
-	with open(stairsLinePath, "rb") as file:
+	with open(stairsLinesPath, "rb") as file:
 		reader = csv.reader(file, delimiter=",")
 		doorsList = []
 		cuboid = []
@@ -169,8 +169,8 @@ def getDataStairs(dimX,dimY,externalLinesPath,internalLinesPath,stairsLinePath):
 
 from house_structure import *
 
-def adaptWindow(dimX,dimY,externalLinesPath,windowsLinePath):
-    data=getDataWindows(dimX,dimY,externalLinesPath,windowsLinePath)
+def adaptWindow(data):
+
     windows=[]
     for d in data:
         print(d[0])
@@ -186,8 +186,8 @@ def adaptWindow(dimX,dimY,externalLinesPath,windowsLinePath):
 
     return STRUCT(windows)
 
-def adaptExternalDoor(dimX,dimY,externalLinesPath,doorsLinePath):
-	data=getDataExternalDoors(dimX,dimY,externalLinesPath,doorsLinePath)
+def adaptDoor(data):
+	#data=getDataExternalDoors(dimX,dimY,externalLinesPath,doorsLinesPath)
 	doors=[]
 	for d in data:
 		if d[0][0]>d[0][1]:
@@ -208,30 +208,9 @@ def adaptExternalDoor(dimX,dimY,externalLinesPath,doorsLinePath):
 
 	return STRUCT(doors)
 
-def adaptInternalDoor(dimX,dimY,externalLinesPath,internalLinesPath,doorsLinePath):
-	data=getDatainternalDoors(dimX,dimY,externalLinesPath,internalLinesPath,doorsLinePath)
-	doors=[]
-	for d in data:
-		if d[0][0]>d[0][1]:
-			if d[0][0]>=1.5:
-				door=createDubleDoor(d[0][0],d[0][1],d[0][2],color(102,51,0))
-			else:
-				door=createSingleDoor(d[0][0],d[0][1],d[0][2],color(102,51,0))
-			door=rotation(door,2)
-		else:
-			if d[0][1]>=1.5:
-				door=createDubleDoor(d[0][1],d[0][0],d[0][2],color(102,51,0))
-			else:
-				door=createSingleDoor(d[0][1],d[0][0],d[0][2],color(102,51,0))
-			door=rotation(door,1)
-		door=STRUCT([T([1,2,3])(d[1]),door])
-		doors.append(door)
 
-
-	return STRUCT(doors)
-
-def adaptStairs(dimX,dimY,externalLinesPath,internalLinesPath,stairsLinePath):
-	data=getDataStairs(dimX,dimY,externalLinesPath,internalLinesPath,stairsLinePath)
+def adaptStairs(data):
+	#data=getDataStairs(dimX,dimY,externalLinesPath,internalLinesPath,stairsLinesPath)
 	stairs = []
 	for d in data:
 		if d[0][0]>d[0][1]:
@@ -246,37 +225,23 @@ def adaptStairs(dimX,dimY,externalLinesPath,internalLinesPath,stairsLinePath):
 
 	return STRUCT(stairs)
 
-def completeSecondFloor(dx,dy,externalLinesPath,internalLinesPath,windowsLinePath,doorsLinePath):
-	secondFloor= ggpl_building_house_second_floor(dx,dy)
-	secondFloor=STRUCT([secondFloor,adaptWindow(dx,dy,externalLinesPath,windowsLinePath),adaptInternalDoor(dx,dy,externalLinesPath,internalLinesPath,doorsLinePath)])
+def completeSecondFloor(secondFloorStruct,dataWindows,dataInternalDoor):
+
+	
+	secondFloor=STRUCT([secondFloorStruct,adaptWindow(dataWindows),adaptDoor(dataInternalDoor)])
 	return secondFloor
-def completeFirstFloor(dx,dy,externalLinesPath,internalLinesPath,windowsLinePath,doorsLinePath,stairsLinePath):
-	house = ggpl_building_house(dx,dy)
-	house=STRUCT([house,adaptWindow(dx,dy,externalLinesPath,windowsLinePath),adaptInternalDoor(dx,dy,externalLinesPath,internalLinesPath,doorsLinePath),adaptExternalDoor(dx,dy,externalLinesPath,doorsLinePath),adaptStairs(dx,dy,externalLinesPath,internalLinesPath,stairsLinePath)])
-	return house
 
-def buildingCompleteHouse():
-	def completeFloors(dx,dy,rotate):
-		""""def completeFirstFloor(externalLinesPath,internalLinesPath,windowsLinePath,doorsLinePath,stairsLinePath):
-			house = ggpl_building_house(dx,dy)
-			house=STRUCT([house,adaptWindow(dx,dy,externalLinesPath,windowsLinePath),adaptInternalDoor(dx,dy,externalLinesPath,internalLinesPath,doorsLinePath),adaptExternalDoor(dx,dy,externalLinesPath,doorsLinePath),adaptStairs(dx,dy,externalLinesPath,internalLinesPath,stairsLinePath)])
-			house=onAxes(house)
-			house = rotation(house,rotate)
-			return house"""
-		def completeSecondFloor(externalLinesPath,internalLinesPath,windowsLinePath,doorsLinePath):
-			secondFloor= ggpl_building_house_second_floor(dx,dy)
-			secondFloor=STRUCT([secondFloor,adaptWindow(dx,dy,externalLinesPath,windowsLinePath),adaptInternalDoor(dx,dy,externalLinesPath,internalLinesPath,doorsLinePath)])
-			secondFloor = rotation(secondFloor,rotate)
-			return secondFloor
+def completeFirstFloor(firstFloorStruct, dataWindows, dataExternalDoor, dataInternalDoor, dataStairs):
 
-		return completeSecondFloor
-	return completeFloors
-def roofCreator(dx1,dy1,dx2,dy2):
+	firstFloor = STRUCT([firstFloorStruct,adaptWindow(dataWindows),adaptDoor(dataInternalDoor),adaptDoor(dataExternalDoor),adaptStairs(dataStairs)])
+	return firstFloor
 
-	house = ggpl_building_house(dx1,dy1)
-	house2 = ggpl_building_house_second_floor(dx2,dy2)
-	dim1=getDimensionAndPosition(house)
-	dim2=getDimensionAndPosition(house2)
+
+def roofCreator(firstFloor, secondFloor):
+
+
+	dim1=getDimensionAndPosition(firstFloor)
+	dim2=getDimensionAndPosition(secondFloor)
 	dim=[[dim1[0][0]-dim2[0][0],9,0],[dim2[1][0]+dim2[0][0],dim2[1][1],0]]
 
 	punti=[]
@@ -303,25 +268,57 @@ def roofCreator(dx1,dy1,dx2,dy2):
 	roof = STRUCT([T(3)(3),roof])
 	return roof
 
+def desingHouse(externalLinesPath,internalLinesPath,externalLinesPathSecond,internalLinesPathSecond):
+	def houseElements(windowsLinesPath,doorsLinesPath,stairsLinesPath,windowsLinesPathSecond,doorsLinesPathSecond):
+		def setDim(firstX,firstY,secondX,secondY):
+			firstFloorStruct = ggpl_building_house(firstX,firstY,externalLinesPath,internalLinesPath,windowsLinesPath,doorsLinesPath)
+			secondFloorStruct = ggpl_building_house_second_floor(secondX,secondY,externalLinesPathSecond,internalLinesPathSecond,windowsLinesPathSecond,doorsLinesPathSecond)
+
+			dataWindows1 = getDataWindows(firstX,firstY,externalLinesPath,windowsLinesPath)
+			dataExternalDoor1 = getDataExternalDoors(firstX,firstY,externalLinesPath,doorsLinesPath)
+			dataInternalDoor1 = getDatainternalDoors(firstX,firstY,externalLinesPath,internalLinesPath,doorsLinesPath)
+			dataStairs1 = getDataStairs(firstX,firstY,externalLinesPath,internalLinesPath,stairsLinesPath)
+			first =  completeFirstFloor(firstFloorStruct, dataWindows1, dataExternalDoor1, dataInternalDoor1, dataStairs1)
+			first = onAxes(first)
+			secondFloorStruct = ggpl_building_house_second_floor(secondX,secondY,externalLinesPathSecond,internalLinesPathSecond,windowsLinesPathSecond,doorsLinesPathSecond)
+			dataWindows2= getDataWindows(secondX,secondY,externalLinesPathSecond,windowsLinesPathSecond)
+			dataInternalDoor2= getDatainternalDoors(secondX,secondY,externalLinesPathSecond,internalLinesPathSecond,doorsLinesPathSecond)
+			second = completeSecondFloor(secondFloorStruct,dataWindows2,dataInternalDoor2)
+			second = onAxes(second)
+			roof = roofCreator(first,second)
+			roof = onAxes(roof)
+			column = CUBOID([0.3,0.3,3])
+			column = TEXTURE(["texture/wall_internal.jpg", FALSE, TRUE, 1, 1, 0, 2, 2])(column)
+			VIEW(first)
+			house = STRUCT([first,T(3)(3),second])
+			VIEW(house)
+			house = STRUCT([house,roof])
+			house = rotation(house,2)
+			house = STRUCT([house,column])
+			return house
+		return setDim
+	return houseElements
+
+
+
 def main():
-	#house = buildingCompleteHouse()(19,9,2)("lines/esterno.lines","lines/interno.lines","lines/finestre.lines", "lines/porte.lines", "lines/scala.lines")("lines/esterno2.lines","lines/interno2.lines","lines/finestre2.lines", "lines/porte2.lines")
-	#house = buildingCompleteHouse()(19,9,2)("lines/esterno2.lines","lines/interno2.lines","lines/finestre2.lines", "lines/porte2.lines")
-	first =  completeFirstFloor(19,9,"lines/esterno.lines","lines/interno.lines","lines/finestre.lines", "lines/porte.lines", "lines/scala.lines")
-	first = onAxes(first)
-	second = completeSecondFloor(16.3,9,"lines/esterno2.lines","lines/interno2.lines","lines/finestre2.lines", "lines/porte2.lines")
-	#dimSecondFloor= getProportionalDimension(first,second,19,9)
-	#second=resize(second,dimSecondFloor[0],dimSecondFloor[1],3)
-	second = onAxes(second)
-	roof = roofCreator(19,9,16.3,9)
-	roof = onAxes(roof)
-	column = CUBOID([0.3,0.3,3])
-	column = TEXTURE(["texture/wall_internal.jpg", FALSE, TRUE, 1, 1, 0, 2, 2])(column)
-	VIEW(first)
-	house = STRUCT([first,T(3)(3),second])
-	VIEW(house)
-	house = STRUCT([house,roof])
-	house = rotation(house,2)
-	house = STRUCT([house,column])
+
+
+	externalLinesPath= "lines/esterno.lines"
+	internalLinesPath= "lines/interno.lines"
+	windowsLinesPath ="lines/finestre.lines"
+	doorsLinesPath = "lines/porte.lines"
+	stairsLinesPath = "lines/scala.lines"
+
+	externalLinesPathSecond= "lines/esterno2.lines"
+	internalLinesPathSecond= "lines/interno2.lines"
+	windowsLinesPathSecond="lines/finestre2.lines"
+	doorsLinesPathSecond = "lines/porte2.lines"
+
+
+	house = desingHouse(externalLinesPath,internalLinesPath,externalLinesPathSecond,internalLinesPathSecond)(windowsLinesPath,doorsLinesPath,stairsLinesPath,windowsLinesPathSecond,doorsLinesPathSecond)(19,9,16.3,9)
+
+
 	VIEW(house)
 
 if __name__ == "__main__":
